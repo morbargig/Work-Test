@@ -310,7 +310,8 @@ getUsers =  function () {
     const csv = require('csv-parser');
     const fs = require('fs');
     let data = []
-    fs.createReadStream('../../user_table.csv')
+    // let bkj = require('../route/')
+    fs.createReadStream('user_table.csv')
         .pipe(csv())
         .on('data', (row) => {
             data.push(row)
