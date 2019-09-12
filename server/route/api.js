@@ -281,5 +281,52 @@ router.get('/answer31', async function (req, res) {
 
 
 
+//------------------------------------------geting data from csv and make new users in DB----------------------------------------------------------------------
+
+//  create a Table 
+var users = sequelize.define('users', {
+    name: { type: Sequelize.STRING },
+    email: { type: Sequelize.STRING },
+    password: { type: Sequelize.STRING },
+    created_date: { type: Sequelize.STRING },
+    country: { type: Sequelize.STRING },
+    age: { type: Sequelize.INTEGER },
+});
+
+const createNewUser = function (i) {
+    users.sync().then(function () {
+        return users.create({
+            name: i.name,
+            email: i.email,
+            password: i.password,
+            created_date: i.created_date,
+            country: i.country,
+            age: i.age,
+        });
+    });
+}
+
+getUsers =  function () {
+    const csv = require('csv-parser');
+    const fs = require('fs');
+    let data = []
+    fs.createReadStream('../../user_table.csv')
+        .pipe(csv())
+        .on('data', (row) => {
+            data.push(row)
+        })
+        .on('end', () => {
+            console.log('CSV file successfully processed')
+            for (i of data) {
+                 createNewUser(i)
+            }
+        });
+}
+
+getUsers()
+
+
+
+
 
 module.exports = router
